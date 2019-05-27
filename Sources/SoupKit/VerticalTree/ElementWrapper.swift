@@ -32,7 +32,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
         return false
     }
 
-    public var isFold: Bool = .initialIsFold
+    public var isFold: Bool = ElementWrapper.initialIsFold
     
     public let element: Element
     
