@@ -92,7 +92,7 @@ extension VerticalTreeNode {
             if let moreInfo = info.nodeDescription {
                 keyText = moreInfo
                     .split(separator: .init("\n"))
-                    .reduce(keyText, { $0 + "\n" + initialPadding + " │" + $1})
+                    .reduce(keyText, { $0 + "\n" + initialPadding + "    " + $1})
                 
             }
         }
