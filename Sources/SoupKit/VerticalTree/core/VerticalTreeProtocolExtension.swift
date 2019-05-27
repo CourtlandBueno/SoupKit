@@ -84,19 +84,18 @@ extension VerticalTreeNode {
         let nodeChain = sequence(first: parent) { $0?.parent }
         let spaceStrings = nodeChain.map { ($0 != nil) ? ($0?.haveNext ?? false ? " │" : ($0?.haveParent ?? false ? "  ":"")) : "" }
         let firstPre = (haveParent ? (haveNext ? " ├" : " └") : "") + (haveChild ? "─┬─ ":"─── ")
+        let initialPadding = spaceStrings.reversed().joined()
         var keyText: String = info.nodeTitle
-        var keyPadding = spaceStrings.reversed().joined() + firstPre
+        let keyPadding = initialPadding + firstPre
 
         if moreInfoIfHave {
-            let moreInfoPadding = String.init(repeating: " ", count: keyPadding.count + firstPre.count)
             if let moreInfo = info.nodeDescription {
                 keyText = moreInfo
                     .split(separator: .init("\n"))
-                    .reduce(keyText, { $0 + "\n" + moreInfoPadding + $1})
+                    .reduce(keyText, { $0 + "\n" + initialPadding + " │" + $1})
                 
             }
         }
-        //let keyText = moreInfoIfHave ? (info.nodeDescription ?? info.nodeTitle) : info.nodeTitle
         return keyPadding + keyText
     }
     
