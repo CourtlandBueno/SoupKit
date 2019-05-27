@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "SwiftSoup",
+        "repositoryURL": "https://github.com/CourtlandBueno/SwiftSoup.git",
+        "state": {
+          "branch": "master",
+          "revision": "aafd52e1eb0d1b2222614ead93f2312c6ed58bd4",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
