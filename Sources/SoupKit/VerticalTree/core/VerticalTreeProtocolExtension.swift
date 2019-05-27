@@ -84,8 +84,18 @@ extension VerticalTreeNode {
         let nodeChain = sequence(first: parent) { $0?.parent }
         let spaceStrings = nodeChain.map { ($0 != nil) ? ($0?.haveNext ?? false ? " │" : ($0?.haveParent ?? false ? "  ":"")) : "" }
         let firstPre = (haveParent ? (haveNext ? " ├" : " └") : "") + (haveChild ? "─┬─ ":"─── ")
-        let keyText = moreInfoIfHave ? (info.nodeDescription ?? info.nodeTitle) : info.nodeTitle
-        return spaceStrings.reversed().joined() + firstPre + keyText
+        var keyText: String = info.nodeTitle
+        var keyPadding = spaceStrings.reversed().joined() + firstPre
+        if moreInfoIfHave {
+            if let moreInfo = info.nodeDescription {
+                keyText += moreInfo
+                .split(separator: .init("\n"))
+                .reduce("\n" + keyPadding, { $0 + "\n" + keyPadding + $1})
+                
+            }
+        }
+        //let keyText = moreInfoIfHave ? (info.nodeDescription ?? info.nodeTitle) : info.nodeTitle
+        return keyPadding + keyText
     }
     
     /// as a subtree at current node
