@@ -86,11 +86,13 @@ extension VerticalTreeNode {
         let firstPre = (haveParent ? (haveNext ? " ├" : " └") : "") + (haveChild ? "─┬─ ":"─── ")
         var keyText: String = info.nodeTitle
         var keyPadding = spaceStrings.reversed().joined() + firstPre
+
         if moreInfoIfHave {
+            let moreInfoPadding = String.init(repeating: " ", count: keyPadding.count + firstPre.count)
             if let moreInfo = info.nodeDescription {
-                keyText += moreInfo
-                .split(separator: .init("\n"))
-                .reduce("\n" + keyPadding, { $0 + "\n" + keyPadding + $1})
+                keyText = moreInfo
+                    .split(separator: .init("\n"))
+                    .reduce(keyText, { $0 + "\n" + moreInfoPadding + $1})
                 
             }
         }
