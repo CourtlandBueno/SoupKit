@@ -20,7 +20,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
         return children
     }
     
-    public var length: TreeNodeLength = .indexLength(120)
+    public var length: TreeNodeLength = .indexLength(80)
     
     public var nodeTitle: String = ""
     
@@ -28,7 +28,11 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     
     public var info: Infomation { return self }
     
-    public var isFold: Bool = true
+    public static var initialIsFold: Bool {
+        return false
+    }
+
+    public var isFold: Bool = .initialIsFold
     
     public let element: Element
     
