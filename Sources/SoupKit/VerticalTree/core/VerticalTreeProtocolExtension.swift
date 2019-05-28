@@ -93,7 +93,7 @@ extension VerticalTreeNode {
 
         if moreInfoIfHave {
             if let moreInfo = info.nodeDescription {
-                var splitInfo = moreInfo.split(separator: .init("\n"))
+                var splitInfo = moreInfo.split(separator: .init("\n")).map({ String($0) })
                 if !splitInfo.isEmpty {
                     splitInfo.insert(keyText, at: 0)
                 }
