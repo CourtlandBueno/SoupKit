@@ -98,9 +98,10 @@ extension VerticalTreeNode {
                     splitInfo.insert(keyText, at: 0)
                 }
                 let lastPieceOfInfo = splitInfo.popLast()
-                var joinedInfo = splitInfo.joined(separator: "\n" + initialPadding + " |  ")
+                let nodeString = (hasSibling ? " |    " : "   |    ")
+                var joinedInfo = splitInfo.joined(separator: "\n" + initialPadding + nodeString)
                 if let last = lastPieceOfInfo {
-                    joinedInfo += "\n" + initialPadding + " |  " + last
+                    joinedInfo += "\n" + initialPadding + nodeString + last
                 }
                 if !joinedInfo.isEmpty {
                     keyText = joinedInfo
