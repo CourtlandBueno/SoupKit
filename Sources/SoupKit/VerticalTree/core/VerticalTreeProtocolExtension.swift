@@ -83,17 +83,28 @@ extension VerticalTreeNode {
     public func nodePrettyText(_ moreInfoIfHave: Bool = false) -> String {
         let nodeChain = sequence(first: parent) { $0?.parent }
         let spaceStrings = nodeChain.map { ($0 != nil) ? ($0?.haveNext ?? false ? " │" : ($0?.haveParent ?? false ? "  ":"")) : "" }
-        let firstPre = (haveParent ? (haveNext ? " ├" : " └") : "") + (haveChild ? "─┬─ ":"─── ")
+        let isParent = haveChild
+        let hasSibling = haveNext
+        
+        let firstPre = (haveParent ? (hasSibling ? " ├" : " └") : "") + (isParent ? "─┬─ ":"─── ")
         let initialPadding = spaceStrings.reversed().joined()
         var keyText: String = info.nodeTitle
         let keyPadding = initialPadding + firstPre
 
         if moreInfoIfHave {
             if let moreInfo = info.nodeDescription {
-                keyText = moreInfo
-                    .split(separator: .init("\n"))
-                    .reduce(keyText, { $0 + "\n" + initialPadding + "    " + $1})
-                
+                var splitInfo = moreInfo.split(separator: .init("\n"))
+                if !splitInfo.isEmpty {
+                    splitInfo.insert(keyText, at: 0)
+                }
+                let lastPieceOfInfo = splitInfo.popLast()
+                var joinedInfo = splitInfo.joined(separator: "\n" + initialPadding + " ├ ")
+                if let last = lastPieceOfInfo {
+                    joinedInfo += "\n" + initialPadding + " └ "
+                }
+                if !joinedInfo.isEmpty {
+                    keyText = joinedInfo
+                }
             }
         }
         return keyPadding + keyText
