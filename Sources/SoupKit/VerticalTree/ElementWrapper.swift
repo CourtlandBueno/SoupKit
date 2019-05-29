@@ -7,6 +7,7 @@
 
 import SwiftSoup
 import Foundation
+import VerticalTree
 
 public final class ElementWrapper: VerticalTreeNode, Infomation {
     

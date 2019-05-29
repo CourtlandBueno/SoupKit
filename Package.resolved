@@ -9,6 +9,15 @@
           "revision": "aafd52e1eb0d1b2222614ead93f2312c6ed58bd4",
           "version": null
         }
+      },
+      {
+        "package": "VerticalTree",
+        "repositoryURL": "https://github.com/CourtlandBueno/VerticalTree.git",
+        "state": {
+          "branch": "master",
+          "revision": "2cc1d609ced047bbd7271e093c2ce86c25d2bacf",
+          "version": null
+        }
       }
     ]
   },
