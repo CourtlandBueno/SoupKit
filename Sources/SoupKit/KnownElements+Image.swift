@@ -24,8 +24,9 @@ extension Bundle {
 }
 
 #if os(Linux)
+//TODO: add Linux image support
 
-#else
+#elseif os(iOS)
 public extension KnownElements {
     var image: Image {
         if let image = Image(named: "htmlTag/\(rawValue)", in: Bundle.default, compatibleWith: nil) {
@@ -35,7 +36,15 @@ public extension KnownElements {
         }
     }
 }
-
-
+#elseif os(macOS)
+public extension KnownElements {
+    var image: Image {
+        if let image = Image(named: "htmlTag/\(rawValue)") {
+            return image
+        } else {
+            return Image(named: "htmlTag/empty")!
+        }
+    }
+}
 
 #endif
