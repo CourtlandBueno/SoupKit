@@ -53,7 +53,8 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     
     public class var nodetitleSetter: (Element) -> String {
         return { e in
-            return "<" + e.tagName() + ">"
+            let ownText = e.ownText()
+            return "<" + e.tagName() + "> " + (ownText.isEmpty ? "" : "\"\(ownText)\"")
         }
     }
     
@@ -62,10 +63,6 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
             var descriptionElements: [String] = []
             if let cssSelector = try? e.cssSelector() {
                 descriptionElements.append(" ⌗ " + cssSelector)
-            }
-            let ownText = e.ownText()
-            if !ownText.isEmpty {
-                descriptionElements.append(" ⎁ \"\(ownText)\"")
             }
             if let attrList = e.attributes?.asList() {
                 for attr in attrList {
