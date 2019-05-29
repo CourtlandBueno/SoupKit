@@ -68,7 +68,19 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
                 descriptionElements.append("\"\(ownText)\"")
             }
             if let attrList = e.attributes?.asList() {
-                descriptionElements.append(contentsOf: attrList.map({"[\($0.getKey())] " + $0.getValue()}))
+                for attr in attrList {
+                    let key = attr.getKey()
+                    var de: String = "[\(key)] "
+                    switch key {
+                    case "href", "src":
+                        if let absValue = try? e.absUrl(key) {
+                            de += absValue
+                        } else { fallthrough }
+                    default:
+                        de += attr.getValue()
+                    }
+                    descriptionElements.append(de)
+                }
             }
             guard !descriptionElements.isEmpty else { return nil }
             return descriptionElements.map({" ‣ " + $0}).joined(separator: "\n")
