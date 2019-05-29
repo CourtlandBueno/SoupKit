@@ -53,19 +53,19 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     
     public class var nodetitleSetter: (Element) -> String {
         return { e in
-            return "<" + e.tagName() + "> " + ((try? e.cssSelector()) ?? "")
+            return "<" + e.tagName() + ">"
         }
     }
     
     public class var nodeDescriptionSetter: (Element) -> String? {
         return { e in
             var descriptionElements: [String] = []
-//            if let cssSelector = try? e.cssSelector() {
-//                descriptionElements.append(cssSelector)
-//            }
+            if let cssSelector = try? e.cssSelector() {
+                descriptionElements.append(" ⌗ " + cssSelector)
+            }
             let ownText = e.ownText()
             if !ownText.isEmpty {
-                descriptionElements.append("\"\(ownText)\"")
+                descriptionElements.append(" ⎁ \"\(ownText)\"")
             }
             if let attrList = e.attributes?.asList() {
                 for attr in attrList {
@@ -79,11 +79,11 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
                     default:
                         de += attr.getValue()
                     }
-                    descriptionElements.append(de)
+                    descriptionElements.append(" ‣ " + de)
                 }
             }
             guard !descriptionElements.isEmpty else { return nil }
-            return descriptionElements.map({" ‣ " + $0}).joined(separator: "\n")
+            return descriptionElements.joined(separator: "\n")
         }
     }
     
