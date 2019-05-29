@@ -53,30 +53,25 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     
     public class var nodetitleSetter: (Element) -> String {
         return { e in
-            let id = e.id()
-            let ownText = e.ownText()
-            var title = "<\(e.tagName())>"
-            if !id.isEmpty {
-                title += " #\(id)"
-            }
-            if !ownText.isEmpty {
-                title += "\"\(ownText)\""
-            }
-            return title
+            return "<" + e.tagName() + "> " + ((try? e.cssSelector()) ?? "")
         }
     }
     
     public class var nodeDescriptionSetter: (Element) -> String? {
         return { e in
-            guard let attr = e.attributes?.clone() else { return nil }
-            try? attr.remove(key: "id")
-            let attrList = attr.asList()
-            guard !attrList.isEmpty else {
-                return nil
+            var descriptionElements: [String] = []
+//            if let cssSelector = try? e.cssSelector() {
+//                descriptionElements.append(cssSelector)
+//            }
+            let ownText = e.ownText()
+            if !ownText.isEmpty {
+                descriptionElements.append("\"\(ownText)\"")
             }
-            return attrList
-                .map({"‣ " + $0.toString()})
-                .joined(separator: "\n")
+            if let attrList = e.attributes?.asList() {
+                descriptionElements.append(contentsOf: attrList.map({"[\($0.getKey())] " + $0.getValue()}))
+            }
+            guard !descriptionElements.isEmpty else { return nil }
+            return descriptionElements.map({" ‣ " + $0}).joined(separator: "\n")
         }
     }
     
