@@ -37,18 +37,24 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     
     public let element: Element
     
-    public init(_ element: Element, indexPath: IndexPath, parent: ElementWrapper? = nil) {
+    public init(_ element: Element,
+                indexPath: IndexPath,
+                parent: ElementWrapper? = nil,
+                children: [ElementWrapper] = [],
+                titleSetter: @escaping (Element) -> String = ElementWrapper.nodetitleSetter,
+                descriptionSetter: @escaping (Element) -> String? = ElementWrapper.nodeDescriptionSetter,
+                length: TreeNodeLength = .indexLength(80)) {
         self.element = element
         self.indexPath = indexPath
-        self.nodeTitle = ElementWrapper.nodetitleSetter(element)
-        self.nodeDescription = ElementWrapper.nodeDescriptionSetter(element)
+        self.nodeTitle = titleSetter(element)
+        self.nodeDescription = descriptionSetter(element)
         self.parent = parent
+        self.children = children
+        self.length = length
     }
     
     public convenience init(document: Document) {
-        self.init(document, indexPath: [0])
-        cachedRoot = self
-        wrapChildren(recursive: true)
+        self.init(root: document)
     }
     
     public convenience init(root: Element) {
@@ -57,14 +63,26 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
         wrapChildren(recursive: true)
     }
     
-    public class var nodetitleSetter: (Element) -> String {
+    public convenience init(elements: Elements, baseUri: String, queries: [String] = []) {
+        guard elements.count > 1 else {
+            self.init(root: elements.first!)
+            return
+        }
+        let base = Element(.ol, baseUri: baseUri)
+        self.init(base, indexPath: [0], titleSetter: { _ in queries.joined(separator: ", ")})
+        cachedRoot = self
+        self.children = elements.enumerated().map({ElementWrapper($0.element, indexPath: [0,$0.offset], parent: self)})
+        children.forEach({ $0.wrapChildren(recursive: true) })
+    }
+    
+    public static var nodetitleSetter: (Element) -> String = {
         return { e in
             let ownText = e.ownText()
             return "<" + e.tagName() + "> " + (ownText.isEmpty ? "" : "\"\(ownText)\"")
         }
-    }
+    }()
     
-    public class var nodeDescriptionSetter: (Element) -> String? {
+    public static var nodeDescriptionSetter: (Element) -> String? = {
         return { e in
             var descriptionElements: [String] = []
             if let cssSelector = try? e.cssSelector() {
@@ -88,7 +106,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
             guard !descriptionElements.isEmpty else { return nil }
             return descriptionElements.joined(separator: "\n")
         }
-    }
+    }()
     
     public func wrapChildren(recursive: Bool) {
         for (offset,child) in element.children.enumerated() {
