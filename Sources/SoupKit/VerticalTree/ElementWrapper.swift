@@ -51,6 +51,12 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
         wrapChildren(recursive: true)
     }
     
+    public convenience init(root: Element) {
+        self.init(root, indexPath: [0])
+        cachedRoot = self
+        wrapChildren(recursive: true)
+    }
+    
     public class var nodetitleSetter: (Element) -> String {
         return { e in
             let ownText = e.ownText()
