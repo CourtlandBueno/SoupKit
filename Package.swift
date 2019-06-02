@@ -21,7 +21,9 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "SoupKit",
-            dependencies: ["SwiftSoup", "VerticalTree"]),
+            dependencies: ["SwiftSoup", "VerticalTree"],
+            sources: ["known_attributes.plist"]
+        ),
         .testTarget(
             name: "SoupKitTests",
             dependencies: ["SoupKit"]),
