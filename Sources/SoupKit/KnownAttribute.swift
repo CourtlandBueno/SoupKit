@@ -73,7 +73,7 @@ extension KnownAttribute {
         return attrs
     }
     
-    private static let target = Bundle.init(for: InternalClass.self).url(forResource: "known_attributes", withExtension: "plist")!
+    private static let target = Bundle.init(for: InternalClass.self).url(forResource: "Sources/SoupKit/known_attributes", withExtension: "plist")!
     
     static let cached = try! load(from: Data.init(contentsOf: target))
     
