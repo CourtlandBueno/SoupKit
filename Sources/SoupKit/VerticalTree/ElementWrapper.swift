@@ -77,11 +77,14 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     
     public static var nodetitleSetter: (Element) -> String = {
         return { e in
-            var title = "[\(e.siblingIndex)]"
-            if !e.children.isEmpty {
-                title += "(\(e.children.count)) "
+            var title = ""
+            if let esi = try? e.elementSiblingIndex() {
+                title += "[\(esi)]"
             }
-            title += "<" + e.tagName() + "> "
+            if !e.children.isEmpty {
+                title += "(\(e.children.count))"
+            }
+            title += " < \(e.tagName()) > "
             if let cssSelector = try? e.cssSelector() {
                 title += cssSelector
             }
@@ -94,7 +97,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
             var descriptionElements: [String] = []
             let ownText = e.ownText()
             if !ownText.isEmpty {
-                descriptionElements.append(" 📝 " + ownText)
+                descriptionElements.append(" ✏️ \"\(ownText)\"")
             }
             if let attrList = e.attributes?.asList() {
                 for attr in attrList {
