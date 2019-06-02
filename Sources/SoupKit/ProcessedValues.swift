@@ -42,11 +42,15 @@ public struct ProcessingPipeline: Equatable, Hashable, Codable {
     }
 }
 
-extension ProcessingPipeline {
+public extension ProcessingPipeline {
     
-    public subscript(key: String) -> ProcessingChain? {
+    subscript(key: String) -> ProcessingChain? {
         get { return keyedProcessors[key] }
         set { keyedProcessors[key] = newValue }
+    }
+    
+    mutating func reset() {
+        keyedProcessors.removeAll()
     }
 }
 
@@ -70,3 +74,5 @@ public extension ProcessingPipeline {
         return self == .empty
     }
 }
+
+
