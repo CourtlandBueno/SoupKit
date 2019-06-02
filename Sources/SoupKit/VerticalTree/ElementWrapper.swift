@@ -84,7 +84,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
             if !e.children.isEmpty {
                 title += "(\(e.children.count))"
             }
-            title += " < \(e.tagName()) > "
+            title += " <\(e.tagName())> "
             if let cssSelector = try? e.cssSelector() {
                 title += cssSelector
             }
@@ -97,7 +97,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
             var descriptionElements: [String] = []
             let ownText = e.ownText()
             if !ownText.isEmpty {
-                descriptionElements.append(" ✏️ \"\(ownText)\"")
+                descriptionElements.append(" ✏️  \"\(ownText)\"")
             }
             if let attrList = e.attributes?.asList() {
                 for attr in attrList {
