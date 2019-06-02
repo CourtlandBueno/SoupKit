@@ -9,7 +9,7 @@
 import Foundation
 import SwiftSoup
 
-public struct ProcessedValuesSection: Equatable, Hashable {
+public struct ProcessedValuesSection: Equatable, Hashable, Codable {
     public enum Error: Swift.Error {
         case emptyImageStrings(ProcessedValues)
     }
@@ -73,6 +73,10 @@ public extension ProcessedValuesSection {
         
         self.viewModels = try zipIfAvailable(values: values)
         
+    }
+    
+    init(payload: DocumentParsingPayload, pipeline: ProcessingPipeline) throws {
+        self = try .init(source: payload.url, pipeline: pipeline, element: try SwiftSoup.parse(payload.html, payload.url.absoluteString))
     }
 }
 

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ProcessedValuesViewModel: Equatable, Hashable {
+public struct ProcessedValuesViewModel: Equatable, Hashable, Codable {
     public var userInfo: [String : String]
     
 }
