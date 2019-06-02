@@ -77,16 +77,24 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     
     public static var nodetitleSetter: (Element) -> String = {
         return { e in
-            let ownText = e.ownText()
-            return "<" + e.tagName() + "> " + (ownText.isEmpty ? "" : "\"\(ownText)\"")
+            var title = "[\(e.siblingIndex)]"
+            if !e.children.isEmpty {
+                title += "(\(e.children.count)) "
+            }
+            title += "<" + e.tagName() + "> "
+            if let cssSelector = try? e.cssSelector() {
+                title += cssSelector
+            }
+            return title
         }
     }()
     
     public static var nodeDescriptionSetter: (Element) -> String? = {
         return { e in
             var descriptionElements: [String] = []
-            if let cssSelector = try? e.cssSelector() {
-                descriptionElements.append(" ⌗ " + cssSelector)
+            let ownText = e.ownText()
+            if !ownText.isEmpty {
+                descriptionElements.append(" 📝 " + ownText)
             }
             if let attrList = e.attributes?.asList() {
                 for attr in attrList {
@@ -100,7 +108,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
                     default:
                         de += attr.getValue()
                     }
-                    descriptionElements.append(" ‣ " + de)
+                    descriptionElements.append(" 🔹 " + de)
                 }
             }
             guard !descriptionElements.isEmpty else { return nil }
