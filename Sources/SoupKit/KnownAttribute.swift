@@ -89,4 +89,6 @@ extension KnownAttribute {
         .reduce(into: [KnownElements : [KnownAttribute]]()) { (acc, element) in
         acc[element] = cached.filter({ $0.relatedElements.contains(element) })
     }
+    
+    public static let all: [KnownAttribute] = cached
 }
