@@ -75,11 +75,7 @@ extension KnownAttribute {
     
     private static let target = Bundle.init(for: InternalClass.self).url(forResource: "known_attributes", withExtension: "plist")!
     
-    static let cached = try! load(from: Data.init(contentsOf: target))
-    
-    static func load(from data: Data) throws -> [KnownAttribute] {
-        return try PropertyListDecoder().decode([KnownAttribute].self, from: data)
-    }
+    static let cached = KnownAttribute.Cache.all
     
     static let nameKeyedKnownAttributes = [String:[KnownAttribute]](grouping: cached) { (element) -> String in
         return element.name
