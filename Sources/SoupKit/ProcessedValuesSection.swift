@@ -87,8 +87,10 @@ public extension ProcessedValuesSection {
         
         var vms = [ProcessedValuesViewModel](repeating: .empty, count: maxCount)
         
-        max.enumerated().forEach({
-            vms[$0.offset].userInfo[$0.element.key] = $0.element.value[$0.offset]
+        max.enumerated().forEach({ groupOffset, element in
+            for (offset, value) in element.value.enumerated() {
+                vms[offset].userInfo[element.key] = value
+            }
         })
         self = .init(source: payload.url, pipeline: pipeline, viewModels: vms)
     }
