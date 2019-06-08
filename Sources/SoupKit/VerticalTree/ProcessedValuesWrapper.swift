@@ -52,7 +52,7 @@ public final class ProcessedValuesWrapper: VerticalTreeNode, Infomation {
         
         switch value {
         case .root(pipeline: let pipeline, sections: let sections):
-            self.nodeTitle = "[\(sections.count)] - pipeline name: `\(pipeline.name)`"
+            self.nodeTitle = "\(sections.count) sections - pipeline name: `\(pipeline.name)`"
             
             self.nodeDescription = pipeline.keyedProcessors
                 .sorted(by: {$0.key < $1.key})
