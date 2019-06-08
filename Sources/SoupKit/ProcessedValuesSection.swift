@@ -76,7 +76,21 @@ public extension ProcessedValuesSection {
     }
     
     init(payload: DocumentParsingPayload, pipeline: ProcessingPipeline) throws {
-        self = try .init(source: payload.url, pipeline: pipeline, element: try SwiftSoup.parse(payload.html, payload.url.absoluteString))
+        let doc = try SwiftSoup.parse(payload.html, payload.url.absoluteString)
+        let values = try pipeline.execute(doc)
+        let sortedVals = values.values.sorted(by: {$0.key < $1.key})
+        let countGroupedValues = [Int : [(key: String, value: [String])]].init(grouping: sortedVals, by: {$0.value.count})
+        guard let max = countGroupedValues.max(by: {$0.value.count < $1.value.count}).map({$0.value}), let maxCount = max.map({$0.value.count}).first else {
+            self = .init(source: payload.url, pipeline: pipeline, viewModels: [])
+            return
+        }
+        
+        var vms = [ProcessedValuesViewModel](repeating: .empty, count: maxCount)
+        
+        max.enumerated().forEach({
+            vms[$0.offset].userInfo[$0.element.key] = $0.element.value[$0.offset]
+        })
+        self = .init(source: payload.url, pipeline: pipeline, viewModels: vms)
     }
 }
 
