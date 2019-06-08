@@ -38,7 +38,7 @@ public final class ProcessedValuesWrapper: VerticalTreeNode, Infomation {
     public let value: Value
     
     public convenience init(pipeline: ProcessingPipeline, sections: [ProcessedValuesSection]) {
-        self.init(value: .root(pipeline: pipeline, sections: sections), indexPath: [0], parent: nil)
+        self.init(value: .root(pipeline: pipeline, sections: sections), indexPath: [], parent: nil)
     }
     
     public convenience init(section: ProcessedValuesSection, indexPath: IndexPath = [0], parent: ProcessedValuesWrapper? = nil) {
