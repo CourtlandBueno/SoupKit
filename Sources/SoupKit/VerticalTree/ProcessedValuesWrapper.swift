@@ -30,12 +30,15 @@ public final class ProcessedValuesWrapper: VerticalTreeNode, Infomation {
     public var isFold: Bool = false
 
     public enum Value {
+        case root(pipeline: ProcessingPipeline, sections: [ProcessedValuesSection])
         case section(ProcessedValuesSection)
         case viewModel(ProcessedValuesViewModel)
     }
     
     public let value: Value
-    
+    public convenience init(pipeline: ProcessingPipeline, sections: [ProcessedValuesSection]) {
+        self.init(value: .root(pipeline: pipeline, sections: sections), indexPath: [0], parent: nil)
+    }
     public convenience init(section: ProcessedValuesSection, indexPath: IndexPath = [0], parent: ProcessedValuesWrapper? = nil) {
         self.init(value: .section(section), indexPath: indexPath, parent: parent)
     }
@@ -46,9 +49,30 @@ public final class ProcessedValuesWrapper: VerticalTreeNode, Infomation {
         self.parent = parent
         
         switch value {
+        case .root(pipeline: let pipeline, sections: let sections):
+            self.nodeTitle = "[\(sections.count)] - pipeline name: `\(pipeline.name)`"
+            
+            self.nodeDescription = pipeline.keyedProcessors
+                .sorted(by: {$0.key < $1.key})
+                .map({ " > [\($0.key)] = \($0.value)"})
+                .joined(separator: "\n")
+            
+            let _children = sections
+                .enumerated()
+                .map({ProcessedValuesWrapper(section: $0.element,
+                                             indexPath: indexPath.appending($0.offset),
+                                             parent: self)})
+            self.children = _children
         case .section(let section):
-            self.nodeTitle = "Section - " + section.source.absoluteString
-            self.nodeDescription = section.pipeline.name
+            let childCount = section.viewModels.count
+            self.nodeTitle = "\(indexPath) - Section - " + section.source.absoluteString
+            
+            self.nodeDescription = [
+                "Pipeline name: \(section.pipeline.name)",
+                "Source: \(section.source.absoluteString)",
+                "Count: \(childCount)"
+                ].map({ " > \($0)"})
+                .joined(separator: "\n")
             
             let _children = section.viewModels
                 .enumerated()
@@ -59,7 +83,7 @@ public final class ProcessedValuesWrapper: VerticalTreeNode, Infomation {
             
             self.children = _children
         case .viewModel(let model):
-            self.nodeTitle = model.title ?? indexPath.description
+            self.nodeTitle = indexPath.description + (model.title ?? "")
             let _description = model.userInfo
                 .sorted(by: {$0.key < $1.key})
                 .map({ " > [\($0.key)] = \($0.value)"})
