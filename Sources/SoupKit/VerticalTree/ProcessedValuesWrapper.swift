@@ -36,9 +36,11 @@ public final class ProcessedValuesWrapper: VerticalTreeNode, Infomation {
     }
     
     public let value: Value
+    
     public convenience init(pipeline: ProcessingPipeline, sections: [ProcessedValuesSection]) {
         self.init(value: .root(pipeline: pipeline, sections: sections), indexPath: [0], parent: nil)
     }
+    
     public convenience init(section: ProcessedValuesSection, indexPath: IndexPath = [0], parent: ProcessedValuesWrapper? = nil) {
         self.init(value: .section(section), indexPath: indexPath, parent: parent)
     }
@@ -63,12 +65,12 @@ public final class ProcessedValuesWrapper: VerticalTreeNode, Infomation {
                                              indexPath: indexPath.appending($0.offset),
                                              parent: self)})
             self.children = _children
+            
         case .section(let section):
             let childCount = section.viewModels.count
             self.nodeTitle = "\(indexPath) - Section - " + section.source.absoluteString
             
             self.nodeDescription = [
-                "Pipeline name: \(section.pipeline.name)",
                 "Source: \(section.source.absoluteString)",
                 "Count: \(childCount)"
                 ].map({ " > \($0)"})
@@ -82,8 +84,9 @@ public final class ProcessedValuesWrapper: VerticalTreeNode, Infomation {
                 })
             
             self.children = _children
+            
         case .viewModel(let model):
-            self.nodeTitle = indexPath.description + (model.title ?? "")
+            self.nodeTitle = indexPath.description + " '\(model.title ?? "")'"
             let _description = model.userInfo
                 .sorted(by: {$0.key < $1.key})
                 .map({ " > [\($0.key)] = \($0.value)"})
