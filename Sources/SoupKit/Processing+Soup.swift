@@ -120,3 +120,9 @@ extension ProcessingPipeline {
         
     }
 }
+
+public extension ProcessedValues {
+    init(element: Element, pipeline: ProcessingPipeline) throws {
+        self = try pipeline.execute(element)
+    }
+}

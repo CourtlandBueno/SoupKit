@@ -62,3 +62,7 @@ extension Element {
         self.init(known.tag, baseUri)
     }
 }
+
+public func parse(payload: DocumentParsingPayload) throws -> Document {
+    return try SwiftSoup.parse(payload.html, payload.url.absoluteString)
+}
