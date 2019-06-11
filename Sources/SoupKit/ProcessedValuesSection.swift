@@ -86,7 +86,11 @@ public extension ProcessedValuesSection {
         }
         
         var vms = [ProcessedValuesViewModel](repeating: .empty, count: maxCount)
-        
+        if let singleVals = countGroupedValues[1] {
+            let vals = singleVals.map({ ($0.key, $0.value.first!) })
+            let userInfo = [String : String].init(uniqueKeysWithValues: vals)
+            vms.append(ProcessedValuesViewModel(userInfo: userInfo))
+        }
         max.enumerated().forEach({ groupOffset, element in
             for (offset, value) in element.value.enumerated() {
                 vms[offset].userInfo[element.key] = value
