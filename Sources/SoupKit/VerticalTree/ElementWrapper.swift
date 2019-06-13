@@ -82,9 +82,17 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
                 title += "(\(esi))"
             }
             title += " <\(e.tagName())> "
-            if !e.children.isEmpty {
-                title += ": \(e.children.count) children"
+            
+            let childString: String
+            switch e.children.count {
+            case 0:
+                childString = ""
+            case 1:
+                childString = ": 1 child"
+            case let x:
+                childString = ": \(x) children"
             }
+            title += childString
             return title
         }
     }()
@@ -93,11 +101,11 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
         return { e in
             var descriptionElements: [String] = []
             if let cssSelector = try? e.cssSelector() {
-                descriptionElements.append("📍 \"\(cssSelector)\"")
+                descriptionElements.append(" 📍 \"\(cssSelector)\"")
             }
             let ownText = e.ownText()
             if !ownText.isEmpty {
-                descriptionElements.append(" ✏️  \"\(ownText)\"")
+                descriptionElements.append(" ✏️ \"\(ownText)\"")
             }            
             if let attrList = e.attributes?.asList() {
                 for attr in attrList {
