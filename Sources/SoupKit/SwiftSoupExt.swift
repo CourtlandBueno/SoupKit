@@ -24,7 +24,7 @@ extension Element {
         
         var nextElement: Element? = self
         var nextElements: [Element] {
-            return nextElement?.children.array() ?? []
+            return nextElement?.children().array() ?? []
         }
         
         while !mutablePath.isEmpty {
@@ -33,7 +33,7 @@ extension Element {
                 return nil
             }
             
-            nextElement = self.children.array()[nextIndex]
+            nextElement = self.children().array()[nextIndex]
         }
         
         return nextElement

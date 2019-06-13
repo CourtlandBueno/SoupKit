@@ -65,8 +65,10 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     
     public convenience init(elements: Elements, baseUri: String, queries: [String] = []) {
         let base = Element(.ol, baseUri: baseUri)
-        queries.enumerated().forEach({ (offset, query) in
-            base[dynamicMember: "css_selector_\(offset)"] = query
+        queries.enumerated().forEach({ (arg) in
+            
+            let (offset, query) = arg
+            try! base.attr("css_selector_\(offset)", query)
         })
         
         self.init(base, indexPath: [0], titleSetter: { _ in return "Selection: \(elements.count) elements"})
@@ -84,7 +86,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
             title += " <\(e.tagName())> "
             
             let childString: String
-            switch e.children.count {
+            switch e.children().count {
             case 0:
                 childString = ""
             case 1:
@@ -107,7 +109,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
             if !ownText.isEmpty {
                 descriptionElements.append(" ✏️ \"\(ownText)\"")
             }            
-            if let attrList = e.attributes?.asList() {
+            if let attrList = e.getAttributes()?.asList() {
                 for attr in attrList {
                     let key = attr.getKey()
                     var de: String = "[\(key)]="
@@ -128,7 +130,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     }()
     
     public func wrapChildren(recursive: Bool) {
-        for (offset,child) in element.children.enumerated() {
+        for (offset,child) in element.children().enumerated() {
             let wrappedChild = ElementWrapper(child, indexPath: indexPath.appending(offset), parent: self)
             children.append(wrappedChild)
             if recursive {
