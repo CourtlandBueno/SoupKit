@@ -46,7 +46,7 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
                 length: TreeNodeLength = .indexLength(80)) {
         self.element = element
         self.indexPath = indexPath
-        self.nodeTitle = titleSetter(element)
+        self.nodeTitle = "\(indexPath):" + titleSetter(element)
         self.nodeDescription = descriptionSetter(element)
         self.parent = parent
         self.children = children
@@ -64,12 +64,12 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     }
     
     public convenience init(elements: Elements, baseUri: String, queries: [String] = []) {
-        guard elements.count > 1 else {
-            self.init(root: elements.first!)
-            return
-        }
         let base = Element(.ol, baseUri: baseUri)
-        self.init(base, indexPath: [0], titleSetter: { _ in queries.joined(separator: ", ")})
+        queries.enumerated().forEach({ (offset, query) in
+            base[dynamicMember: "css_selector_\(offset)"] = query
+        })
+        
+        self.init(base, indexPath: [0], titleSetter: { _ in return "Selection: \(elements.count) elements"})
         cachedRoot = self
         self.children = elements.enumerated().map({ElementWrapper($0.element, indexPath: [0,$0.offset], parent: self)})
         children.forEach({ $0.wrapChildren(recursive: true) })
@@ -79,14 +79,11 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
         return { e in
             var title = ""
             if let esi = try? e.elementSiblingIndex() {
-                title += "[\(esi)]"
-            }
-            if !e.children.isEmpty {
-                title += "(\(e.children.count))"
+                title += "(\(esi))"
             }
             title += " <\(e.tagName())> "
-            if let cssSelector = try? e.cssSelector() {
-                title += cssSelector
+            if !e.children.isEmpty {
+                title += ": \(e.children.count) children"
             }
             return title
         }
@@ -95,14 +92,17 @@ public final class ElementWrapper: VerticalTreeNode, Infomation {
     public static var nodeDescriptionSetter: (Element) -> String? = {
         return { e in
             var descriptionElements: [String] = []
+            if let cssSelector = try? e.cssSelector() {
+                descriptionElements.append("📍 \"\(cssSelector)\"")
+            }
             let ownText = e.ownText()
             if !ownText.isEmpty {
                 descriptionElements.append(" ✏️  \"\(ownText)\"")
-            }
+            }            
             if let attrList = e.attributes?.asList() {
                 for attr in attrList {
                     let key = attr.getKey()
-                    var de: String = "[\(key)] "
+                    var de: String = "[\(key)]="
                     switch key {
                     case "href", "src":
                         if let absValue = try? e.absUrl(key) {
