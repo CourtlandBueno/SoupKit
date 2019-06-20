@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/CourtlandBueno/SwiftSoup.git", .branch("master")),
+        .package(url: "https://github.com/scinfu/SwiftSoup.git", .upToNextMajor(from: "2.2.0")),
         .package(url: "https://github.com/CourtlandBueno/VerticalTree.git", .branch("master")),
     ],
     targets: [
