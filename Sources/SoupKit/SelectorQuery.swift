@@ -239,7 +239,7 @@ struct SelectorComponents: Equatable, Hashable {
             }
         }
         
-        init?(rawValue: Self.RawValue) {
+        init?(rawValue: String) {
             let x = rawValue.trimmingCharacters(in: .whitespaces)
             
             guard let _ = x.range(of: #"^[a-zA-Z]*\|?[a-zA-Z]+\S*$"#, options: .regularExpression) else {
