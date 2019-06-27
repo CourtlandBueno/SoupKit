@@ -13,7 +13,7 @@ extension GetElements: CustomStringConvertible {
         case .all:
             return "*"
         case .byCSSSelector(let query):
-            return "CSS Selector('\(query)')"
+            return query
         case .byTag(let value):
             return value
         case .byClass(let value):
