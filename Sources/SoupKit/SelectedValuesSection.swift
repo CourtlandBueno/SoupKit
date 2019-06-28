@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  SelectedValuesSection.swift
+//  SoupKit
 //
 //  Created by Courtland Bueno on 6/28/19.
 //
