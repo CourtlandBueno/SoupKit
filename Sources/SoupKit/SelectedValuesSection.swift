@@ -48,6 +48,22 @@ public extension SelectedValuesSection {
         })
         self = .init(source: payload.url, chains: chains, sectionInfo: values.singles, viewModels: vms)
     }
+    
+    init(section: ProcessedValuesSection) {
+        self.source = section.source
+        self.chains = Set(section.pipeline.convert())
+        let nonViewable = section.viewModels.filter({!$0.isViewable})
+        self.sectionInfo = nonViewable
+            .map({$0.userInfo})
+            .reduce(into: [String:String](), {$0.merge($1, uniquingKeysWith: { lhs, rhs in return lhs})})
+        var mutableVMs = section.viewModels
+        mutableVMs.removeAll(where: {nonViewable.contains($0)})
+        self.viewModels = mutableVMs.map({ SelectedValuesViewModel(userInfo: $0.userInfo) })
+    }
 }
 
-
+extension ProcessedValuesViewModel {
+    var isViewable: Bool {
+        return self.image != nil || self.selection != nil
+    }
+}

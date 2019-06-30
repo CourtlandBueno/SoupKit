@@ -42,3 +42,18 @@ public extension SelectorChain {
     }
 }
 
+public extension ProcessingPipeline {
+    func convert() -> [SelectorChain] {
+        let pipeline = self
+        let chains: [SelectorChain] = pipeline.keyedProcessors.map({key, value in
+            SelectorChain(processingChain: value, extractorKey: key)
+        })
+        return [[String] : [SelectorChain]]
+            .init(grouping: chains, by: { $0.selectors })
+            .reduce(into: [SelectorChain](), { accum, _chains in
+                accum.append( _chains.value.reduce(into: SelectorChain(selectors: _chains.key, keyedExtractors: [:]), { $0.mergingExtractors($1) }) )
+            })
+        
+        
+    }
+}
