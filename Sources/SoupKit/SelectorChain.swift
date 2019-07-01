@@ -10,6 +10,11 @@ import Foundation
 public struct SelectorChain: Equatable, Hashable, Codable {
     public var selectors: [String]
     public var keyedExtractors: [String : GetValue]
+    
+    public init(selectors: [String], keyedExtractors: [String : GetValue]) {
+        self.selectors = selectors
+        self.keyedExtractors = keyedExtractors
+    }
 }
 
 public extension SelectorChain {
