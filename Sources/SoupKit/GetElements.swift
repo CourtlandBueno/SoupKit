@@ -68,8 +68,8 @@ public enum GetElements {
 
     public var byAttribute: (key: String, value: String)? {
         get {
-            guard case let .byAttribute(value) = self else { return nil }
-            return value
+            guard case let .byAttribute(key, value) = self else { return nil }
+            return (key, value)
         }
         set {
             guard case .byAttribute = self, let newValue = newValue else { return }
@@ -79,8 +79,8 @@ public enum GetElements {
 
     public var byAttributeNot: (key: String, value: String)? {
         get {
-            guard case let .byAttributeNot(value) = self else { return nil }
-            return value
+            guard case let .byAttributeNot(key, value) = self else { return nil }
+            return (key, value)
         }
         set {
             guard case .byAttributeNot = self, let newValue = newValue else { return }
@@ -112,8 +112,8 @@ public enum GetElements {
 
     public var byAttributeValuePrefix: (key: String, valuePrefix: String)? {
         get {
-            guard case let .byAttributeValuePrefix(value) = self else { return nil }
-            return value
+            guard case let .byAttributeValuePrefix(key, valuePrefix) = self else { return nil }
+            return (key, valuePrefix)
         }
         set {
             guard case .byAttributeValuePrefix = self, let newValue = newValue else { return }
@@ -123,8 +123,8 @@ public enum GetElements {
 
     public var byAttributeValueSuffix: (key: String, valueSuffix: String)? {
         get {
-            guard case let .byAttributeValueSuffix(value) = self else { return nil }
-            return value
+            guard case let .byAttributeValueSuffix(key, valueSuffix) = self else { return nil }
+            return (key, valueSuffix)
         }
         set {
             guard case .byAttributeValueSuffix = self, let newValue = newValue else { return }
@@ -134,8 +134,8 @@ public enum GetElements {
 
     public var byAttributeValueContaining: (key: String, valueSubstring: String)? {
         get {
-            guard case let .byAttributeValueContaining(value) = self else { return nil }
-            return value
+            guard case let .byAttributeValueContaining(key, valueSubstring) = self else { return nil }
+            return (key, valueSubstring)
         }
         set {
             guard case .byAttributeValueContaining = self, let newValue = newValue else { return }
@@ -145,8 +145,8 @@ public enum GetElements {
 
     public var byAttributValueMatching: (key: String, regex: String)? {
         get {
-            guard case let .byAttributValueMatching(value) = self else { return nil }
-            return value
+            guard case let .byAttributValueMatching(key, regex) = self else { return nil }
+            return (key, regex)
         }
         set {
             guard case .byAttributValueMatching = self, let newValue = newValue else { return }
